@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<meta http-equiv="Content-Language" content="JA">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="stylesheet" href="../style.css">
+<title>Iterative Methods for Solving Mixed Model Equations (MME) </title>
+</head>
+
+<body>
+<p class="menublock"><a href="../mrode2005.html">Back</a></p>
+
+<h1>Iterative Methods for Solving Mixed Model Equations (MME) </h1>
+
+<h2><a name="section0001">List</a></h2>
+
+<ul>
+<li><a name="tex2html13" href="mme.html#section0002">
+Jocobi Over Relaxation</a>
+<li><a name="tex2html13" href="mme.html#section0003">
+Successive Over Relaxation</a>
+</ul>
+
+
+
+<h2><a name="section0002">Jacobi Over Relaxation</a></h2>
+<p>
+<ul>
+<li>R script: <a href="./jor.txt">jor.txt</a></li>
+<li>Literature 1: Mrode, R.A. 2005. Linear Models for the Prediction of Animal Breeding Values. CAB International, Oxon, UK.</li>
+<li>Literature 2: Misztal, I. 2008. Computational Techniques in Animal Breeding. Course Notes. University of Georgia.</li>
+</ul>
+
+<ol>
+<li>Given the MME, iteratively solve for the solutions by Jocobi Over Relaxation. Consider the following univariate mixed linear model.
+<center><img src="./lme.png"  ></center>
+In the Mixed Model Equation form:
+<center><img src="./mme.png"  ></center>
+where 'A' is an additive relationship matrix and alpha is a ratio of the variance components. It can also be written as:
+<center><img src="./lhs.png"  ></center>
+The left hand side can be decomposed into:
+<center><img src="./jor1.png"  ></center>
+where D is the diagonal matrix and R is the remainder. The (t + 1)th solutions are obtained using the equation: 
+<center><img src="./jor2.png"  ></center>
+where w is the diagonal matrix of relaxation factor. 
+</li>
+
+<li> Here is a numerical application from Mrode (2005), example 3.1, concerning the pre-weaning gain (WWG) of beef calves.
+<pre class="console">
+> # response
+> y <- c(4.5,2.9,3.9,3.5,5.0)
+>
+> # pedigree
+> s <- c(0,0,0,1,3,1,4,3)
+> d <- c(0,0,0,0,2,2,5,6)
+> Ainv <- quass(s,d)
+>
+> # variance component ratio
+> vcr = 40/20
+> 
+> # X matrix
+> X <- matrix(c(1,0,0,1,1,0,1,1,0,0), nrow=5, ncol=2)
+> X
+     [,1] [,2]
+[1,]    1    0
+[2,]    0    1
+[3,]    0    1
+[4,]    1    0
+[5,]    1    0
+
+> # Z matrix
+> z1 <- matrix(0, ncol=3, nrow=5)
+> z2 <- matrix(c(1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1), ncol=5)
+> Z <- cbind(z1,z2)
+> Z
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+[1,]    0    0    0    1    0    0    0    0
+[2,]    0    0    0    0    1    0    0    0
+[3,]    0    0    0    0    0    1    0    0
+[4,]    0    0    0    0    0    0    1    0
+[5,]    0    0    0    0    0    0    0    1
+
+> Xpy <- t(X)%*%y
+> Zpy <- t(Z)%*%y
+> XpX <- t(X)%*% X
+> XpZ <- t(X)%*%Z
+> ZpX <- t(Z)%*%X
+> ZpZ <- t(Z)%*%Z
+> 
+> LHS <- rbind( cbind(XpX, XpZ), cbind(ZpX, ZpZ+Ainv*vcr))
+> RHS <- c(Xpy, Zpy)
+</pre>
+The relaxation factor has been chosen as 1.0 for the fixed effects and 0.8 for the random effects. 
+Initial values included the mean yield for fixed effects.  For animals with phenotypic records, initial values were the deviation of  yields from the mean yield of their respective fixed effects and zero for animals without phenotypic records.
+<pre class="console">
+> inits <- c(4.333,3.400,0,0,0,0.167,-0.5,0.5,-0.833,0.667)
+> w <- c(1,1,rep(0.8,8))
+> disp = FALSE
+</pre>
+</li>
+
+<li> The final solutions were:
+<pre class="console">
+> jor(LHS, RHS, inits, w, disp=FALSE)
+
+Final solutions after 18 th iteration              [,1]
+ [1,]  4.357884994
+ [2,]  3.403872956
+ [3,]  0.099030310
+ [4,] -0.018384432
+ [5,] -0.041024426
+ [6,] -0.008047532
+ [7,] -0.185301976
+ [8,]  0.177676221
+ [9,] -0.248927431
+[10,]  0.183120263
+</pre>
+</li>
+</ol>
+</p>
+
+
+
+
+
+<h2><a name="section0003">Successive Over Relaxation</a></h2>
+<p>
+<ul>
+<li>R script: <a href="./sor.txt">sor.txt</a></li>
+<li>Literature 1: Mrode, R.A. 2005. Linear Models for the Prediction of Animal Breeding Values. CAB International, Oxon, UK.</li>
+<li>Literature 2: Misztal, I. 2008. Computational Techniques in Animal Breeding. Course Notes. University of Georgia.</li>
+</ul>
+
+<ol>
+<li>Given the MME, iteratively solve for the solutions by Successive Over Relaxation. SOR works like JOR except that solutions which already have been computed are used immediately at each time. 
+Applying SOR to the same data as above without relaxation factor (Gauss Seidel method in this case) gives:
+<pre class="console">
+> w2 <- rep(1,10)
+> sor(LHS, RHS, inits, w2, disp=FALSE)
+
+Final solutions after 11 th iteration              [,1]
+ [1,]  4.359129262
+ [2,]  3.405185500
+ [3,]  0.097986927
+ [4,] -0.019280834
+ [5,] -0.041467395
+ [6,] -0.009058115
+ [7,] -0.186312311
+ [8,]  0.176258201
+ [9,] -0.249974023
+[10,]  0.182090470
+</pre>
+</li>
+</ol>
+</p>
+
+
+
+</body>
+</html>
+
