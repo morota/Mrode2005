@@ -7,7 +7,7 @@
 ## Literature: Mrode, R.A. 2005. Linear Models for the Prediction of Animal Breeding Values. CAB International, Oxon, UK.
 
 ## Author: Gota Morota <morota at wisc dot edu>
-## Create: 31-Mar-2010
+## Created: 31-Mar-2010
 ## Last-Modified: 2-Apr-2010
 ## License: GPLv3 or later
 
@@ -15,7 +15,7 @@
 function(t, n){
 	N <- n+1
 	M <- matrix(0, nrow=length(t), ncol=N)
-	a <- -1 + 2*(t-t[1])/(t[length(t)] - t[1])
+	a <- -1 + 2*(t-t[which.min(t)])/(t[which.max(t)] - t[which.min(t)])
 	M[,1] <- 1
 	
 	for (i in 2:N){
