@@ -10,7 +10,7 @@
 ## Literature: Quass, R. L. 1976. Computing the Diagonal Elements and Inverse of a Large Numerator Relationship Matrix. Biometrics 32:949-953.
 
 ## Author: Gota Morota <morota at wisc dot edu>
-## Create: 17-Apr-2009
+## Created: 17-Apr-2009
 ## Last-Modified: 2-Apr-2010
 ## License: GPLv3 or later
 

@@ -9,7 +9,7 @@
 ## Literature: Mrode, R.A. 2005. Linear Models for the Prediction of Animal Breeding Values. CAB International, Oxon, UK.
 
 ## Author: Gota Morota <morota at wisc dot edu>
-## Create: 25-Mar-20010
+## Created: 25-Mar-2010
 ## Last-Modified: 2-Apr-2010
 ## License: GPLv3 or later
 

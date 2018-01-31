@@ -6,7 +6,7 @@
 ## Literature: Schaeffer, L. R. 2009. Animal Models Course Note.
 
 ## Author: Gota Morota <morota at wisc dot edu>
-## Create: 3-Apr-2010
+## Created: 3-Apr-2010
 ## Last-Modified: 4-Apr-2010
 ## License: GPLv3 or later
 

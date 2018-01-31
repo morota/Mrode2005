@@ -11,7 +11,7 @@
 ## Literature: Henderson, C. R. 1976. Simple Method for Computing the Inverse of a Numerator Relationship Matrix Used in Prediction of Breeding Values. Biometrics 32:69-83.
 
 ## Author: Gota Morota <morota at wisc dot edu>
-## Create: 17-Apr-2009
+## Created: 17-Apr-2009
 ## Last-Modified: 2-Apr-2010
 ## License: GPLv3 or later
 
