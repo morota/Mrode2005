@@ -14,7 +14,7 @@
 ## Last-Modified: 2-Apr-2010
 ## License: GPLv3 or later
 
-`quass` <-
+`quaas` <-
 function(s, d){
 	
 	if (nargs()==1){
